@@ -35,3 +35,15 @@ This is a Pokémon Pokédex app powered by PokeAPI, built with **React**, **Type
 ```bash
   pnpm dev
 ```
+
+## Contributing
+
+This repository is for **viewing purposes only**. Contributions are not accepted. Please see the license section below for more details.
+
+## License
+
+This repository's contents are for **viewing purposes only**. You may not copy, modify, distribute, or use any part of the code for any purpose without explicit permission from the author.
+
+---
+
+Enjoy browsing through the world of Pokémon! 🏆
