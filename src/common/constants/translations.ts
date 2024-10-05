@@ -1,3 +1,3 @@
 export const LOCALE_NAMESPACES = {
-    common: "common",
-} as const;
+  common: 'common',
+} as const
