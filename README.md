@@ -1,50 +1,37 @@
-# React + TypeScript + Vite
+# Pokémon Pokédex 🗺️
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Welcome to the **Pokémon Pokédex** project! 🎮
 
-Currently, two official plugins are available:
+This is a Pokémon Pokédex app powered by PokeAPI, built with **React**, **TypeScript**, and **Tailwind CSS**. The app allows you to search, filter, and view detailed information on all Pokémon, including stats, abilities, and evolutions. It supports multiple regions, from Kanto to Galar.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Features
 
-## Expanding the ESLint configuration
+-   **Pokémon Profiles**: View stats, abilities, types, evolutions, and more.
+-   **Search and Filter**: Easily find Pokémon by name, type, or region.
+-   **PokeAPI Integration**: Real-time data from the PokeAPI.
+-   **Region Support**: Browse Pokémon from various regions like Kanto, Johto, Hoenn, and more.
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+## Tech Stack
 
-- Configure the top-level `parserOptions` property like this:
+-   **Frontend**: React, TypeScript, Tailwind CSS
+-   **Backend**: PokeAPI (No custom backend)
 
-```js
-export default tseslint.config({
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
+## Installation
+
+1. Clone the repository:
+
+```bash
+  git clone https://github.com/pleytonsoftware/pokedex.git
 ```
 
-- Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
-- Optionally add `...tseslint.configs.stylisticTypeChecked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and update the config:
+2. Install dependencies:
 
-```js
-// eslint.config.js
-import react from 'eslint-plugin-react'
+```bash
+  pnpm install
+```
 
-export default tseslint.config({
-  // Set the react version
-  settings: { react: { version: '18.3' } },
-  plugins: {
-    // Add the react plugin
-    react,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended rules
-    ...react.configs.recommended.rules,
-    ...react.configs['jsx-runtime'].rules,
-  },
-})
+3. Start the app:
+
+```bash
+  pnpm dev
 ```
