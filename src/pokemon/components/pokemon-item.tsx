@@ -36,7 +36,7 @@ export const PokemonItem = forwardRef<HTMLDivElement, PokemonItemProps>(function
           } as React.CSSProperties
         }
       >
-        <CardHeader className='items-start'>
+        <CardHeader className='items-start pr-0'>
           <CardTitle>
             {' '}
             <span className='capitalize'>
