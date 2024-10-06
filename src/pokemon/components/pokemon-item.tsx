@@ -1,13 +1,16 @@
 import type { PokemonTypeInfo } from '../hooks/use-list-pokemon'
 
-import { forwardRef } from 'react'
-import { Link } from 'react-router-dom'
+import { forwardRef, useEffect, useState } from 'react'
 
 import Color from 'color'
+import { PlayIcon } from 'lucide-react'
+import useSound from 'use-sound'
 
-import { Badge } from '@/core/components/badge'
+import { Button } from '@/core/components/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/core/components/card'
+import { Drawer, DrawerContent } from '@/core/components/drawer'
 import { formatDigits } from '@/core/utils/string'
+import { PokemonTypeBadges } from '@/pokemon-types/components/types'
 import { getTypeColor } from '@/pokemon-types/utils/get-type'
 
 export interface PokemonItemProps {
@@ -22,19 +25,28 @@ export const PokemonItem = forwardRef<HTMLDivElement, PokemonItemProps>(function
   { pokemonItem: pokemon },
   ref,
 ) {
+  const [open, setOpen] = useState<boolean>(false)
+  const [play, { stop }] = useSound(pokemon.cries || [], { volume: 0.5 })
   const mainColor = Color(getTypeColor(pokemon.types[0]))
 
+  const pokemonColorStyle = {
+    '--tw-bg-color': mainColor.hex(),
+    '--tw-hover-bg-color': mainColor.darken(0.2).hex(),
+  } as React.CSSProperties
+
+  useEffect(() => {
+    if (!open) stop()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [open])
+
   return (
-    <Link to={`/pokemon/${pokemon.id}`} key={pokemon.id} className='pokemon-item'>
+    <>
       <Card
+        key={pokemon.id}
+        onClick={() => setOpen(true)}
         ref={ref}
-        className='shadow-md hover:shadow-lg opacity-100 min-h-16 transition-all duration-200 flex justify-between bg-[var(--tw-bg-color)] hover:bg-[var(--tw-hover-bg-color)] text-neutral-100 hover:scale-105 md:hover:scale-110'
-        style={
-          {
-            '--tw-bg-color': mainColor.hex(),
-            '--tw-hover-bg-color': mainColor.darken(0.2).hex(),
-          } as React.CSSProperties
-        }
+        className='pokemon-item hover:cursor-pointer shadow-md hover:shadow-lg opacity-100 min-h-16 transition-all duration-200 flex justify-between bg-[var(--tw-bg-color)] hover:bg-[var(--tw-hover-bg-color)] text-neutral-100 hover:scale-105 md:hover:scale-110'
+        style={pokemonColorStyle}
       >
         <CardHeader className='items-start pr-0'>
           <CardTitle>
@@ -44,26 +56,7 @@ export const PokemonItem = forwardRef<HTMLDivElement, PokemonItemProps>(function
             </span>
           </CardTitle>
           <CardDescription className='flex flex-col text-sm gap-1'>
-            <div className='flex flex-wrap gap-2'>
-              {pokemon.types.map((type) => {
-                const color = Color(getTypeColor(type))
-
-                return (
-                  <Badge
-                    key={type}
-                    className='capitalize bg-[var(--tw-bg-color)] hover:bg-[var(--tw-hover-bg-color)] text-neutral-100 hover:text-neutral-100'
-                    style={
-                      {
-                        '--tw-bg-color': color.lighten(0.1).hex(),
-                        '--tw-hover-bg-color': color.darken(0.3).hex(),
-                      } as React.CSSProperties
-                    }
-                  >
-                    {type}
-                  </Badge>
-                )
-              })}
-            </div>
+            <PokemonTypeBadges types={pokemon.types} />
           </CardDescription>
         </CardHeader>
         <CardContent className='pt-10 pb-2 items-end relative h-fit self-end bottom-2'>
@@ -75,6 +68,33 @@ export const PokemonItem = forwardRef<HTMLDivElement, PokemonItemProps>(function
           {pokemon.image && <img src={pokemon.image} alt={pokemon.name} className='relative' />}
         </CardContent>
       </Card>
-    </Link>
+      <Drawer onOpenChange={setOpen} open={open}>
+        <DrawerContent
+          className='min-h-[80vh] md:min-h-96 outline-none text-neutral-100 bg-[var(--tw-bg-color)] border-[var(--tw-bg-color)]'
+          style={pokemonColorStyle}
+        >
+          <div className='flex flex-col gap-4 justify-center items-center h-full'>
+            <span className='flex gap-2'>
+              <span className='text-3xl capitalize'>{replaceGenderSymbol(pokemon.name)}</span>
+              <span className='text-xs mt-1'>#{formatDigits(pokemon.id)}</span>
+            </span>
+            {pokemon.image && <img src={pokemon.image} alt={pokemon.name} className='relative h-40' />}
+            <PokemonTypeBadges types={pokemon.types} />
+            {pokemon.cries && (
+              <Button variant='ghost' onClick={() => play()} className='hover:bg-white/20 hover:text-neutral-100'>
+                <PlayIcon className='w-4 h-4' />
+              </Button>
+            )}
+          </div>
+          {/* <DrawerFooter>
+          // TODO open details button here
+            <Button>Submit</Button>
+            <DrawerClose>
+              <Button variant='outline'>Cancel</Button>
+            </DrawerClose>
+          </DrawerFooter> */}
+        </DrawerContent>
+      </Drawer>
+    </>
   )
 })
