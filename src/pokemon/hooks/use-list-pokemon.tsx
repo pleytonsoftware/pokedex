@@ -17,6 +17,7 @@ export interface PokemonTypeInfo {
   name: string
   types: string[]
   image: string | null
+  cries: string | null
 }
 
 const fetchPokemonList = async (limit: number, offset: number): Promise<PokemonTypeInfoResult> => {
@@ -29,6 +30,7 @@ const fetchPokemonList = async (limit: number, offset: number): Promise<PokemonT
         name: details.name,
         types: details.types.map((typeInfo) => typeInfo.type.name),
         image: details.sprites.front_default,
+        cries: details.cries.latest || null,
       }
     }),
   )
