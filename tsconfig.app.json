@@ -30,7 +30,8 @@
       "@core/*": ["./src/core/components/*"],
       "@assets/*": ["./src/assets/*"],
       "@configs/*": ["./src/common/configs/*"]
-    }
+    },
+    "baseUrl": "."
   },
   "include": ["./src"]
 }
