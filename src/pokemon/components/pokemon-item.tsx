@@ -45,19 +45,24 @@ export const PokemonItem = forwardRef<HTMLDivElement, PokemonItemProps>(function
           </CardTitle>
           <CardDescription className='flex flex-col text-sm gap-1'>
             <div className='flex flex-wrap gap-2'>
-              {pokemon.types.map((type) => (
-                <Badge
-                  key={type}
-                  className='capitalize'
-                  style={{
-                    background: Color(getTypeColor(type) || '#000')
-                      .lighten(0.2)
-                      .hex(),
-                  }}
-                >
-                  {type}
-                </Badge>
-              ))}
+              {pokemon.types.map((type) => {
+                const color = Color(getTypeColor(type))
+
+                return (
+                  <Badge
+                    key={type}
+                    className='capitalize bg-[var(--tw-bg-color)] hover:bg-[var(--tw-hover-bg-color)] text-neutral-100 hover:text-neutral-100'
+                    style={
+                      {
+                        '--tw-bg-color': color.lighten(0.1).hex(),
+                        '--tw-hover-bg-color': color.darken(0.3).hex(),
+                      } as React.CSSProperties
+                    }
+                  >
+                    {type}
+                  </Badge>
+                )
+              })}
             </div>
           </CardDescription>
         </CardHeader>
