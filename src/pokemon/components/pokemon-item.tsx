@@ -1,6 +1,7 @@
 import type { PokemonTypeInfo } from '../hooks/use-list-pokemon'
 
 import { forwardRef, useEffect, useState } from 'react'
+import { useNavigate } from 'react-router'
 
 import Color from 'color'
 import { PlayIcon } from 'lucide-react'
@@ -8,7 +9,7 @@ import useSound from 'use-sound'
 
 import { Button } from '@/core/components/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/core/components/card'
-import { Drawer, DrawerContent } from '@/core/components/drawer'
+import { Drawer, DrawerContent, DrawerFooter } from '@/core/components/drawer'
 import { formatDigits } from '@/core/utils/string'
 import { PokemonTypeBadges } from '@/pokemon-types/components/types'
 import { getTypeColor } from '@/pokemon-types/utils/get-type'
@@ -27,6 +28,7 @@ export const PokemonItem = forwardRef<HTMLDivElement, PokemonItemProps>(function
 ) {
   const [open, setOpen] = useState<boolean>(false)
   const [play, { stop }] = useSound(pokemon.cries || [], { volume: 0.5 })
+  const navigate = useNavigate()
   const mainColor = Color(getTypeColor(pokemon.types[0]))
 
   const pokemonColorStyle = {
@@ -86,13 +88,19 @@ export const PokemonItem = forwardRef<HTMLDivElement, PokemonItemProps>(function
               </Button>
             )}
           </div>
-          {/* <DrawerFooter>
-          // TODO open details button here
-            <Button>Submit</Button>
-            <DrawerClose>
+          <DrawerFooter className='flex'>
+            {/* // TODO open details button here */}
+            <Button
+              variant='ghost'
+              className='w-fit self-center hover:bg-white/10 hover:text-neutral-100'
+              onClick={() => navigate(`/pokemon/${pokemon.name}`)}
+            >
+              See {pokemon.name} details
+            </Button>
+            {/* <DrawerClose>
               <Button variant='outline'>Cancel</Button>
-            </DrawerClose>
-          </DrawerFooter> */}
+            </DrawerClose> */}
+          </DrawerFooter>
         </DrawerContent>
       </Drawer>
     </>

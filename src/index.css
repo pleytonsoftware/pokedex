@@ -64,3 +64,9 @@
     @apply bg-background text-foreground;
   }
 }
+
+@layer components {
+  .pokemon-item {
+    @apply h-40;
+  }
+}
