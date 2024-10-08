@@ -5,7 +5,7 @@ import { RouterProvider } from 'react-router-dom'
 import ms from 'ms'
 
 import { createSyncStoragePersister } from '@tanstack/query-sync-storage-persister'
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import { QueryClient } from '@tanstack/react-query'
 import { PersistQueryClientProvider } from '@tanstack/react-query-persist-client'
 
 import { ErrorBoundary } from './core/components/error-boundary'
