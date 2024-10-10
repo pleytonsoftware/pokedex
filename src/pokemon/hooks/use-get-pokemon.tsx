@@ -13,7 +13,8 @@ export const useGetPokemon = (
     queryKey: ['pokemon', idName],
     queryFn: () => client.getPokemonByName(idName),
     gcTime: ms('24h'),
-    retry: 2,
+    retry: 5,
+    retryDelay: ms('5s'),
     ...options,
   })
 }

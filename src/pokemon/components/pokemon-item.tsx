@@ -1,15 +1,15 @@
 import type { PokemonTypeInfo } from '../hooks/use-list-pokemon'
 
-import { forwardRef, useEffect, useState } from 'react'
+import { MouseEventHandler, forwardRef, useCallback, useState } from 'react'
 import { useNavigate } from 'react-router'
 
 import Color from 'color'
-import { PlayIcon } from 'lucide-react'
-import useSound from 'use-sound'
 
+import { AudioPlayer } from '@/core/components/audio-player'
 import { Button } from '@/core/components/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/core/components/card'
 import { Drawer, DrawerContent, DrawerFooter } from '@/core/components/drawer'
+import { Image } from '@/core/components/image'
 import { formatDigits } from '@/core/utils/string'
 import { PokemonTypeBadges } from '@/pokemon-types/components/types'
 import { getTypeColor } from '@/pokemon-types/utils/get-type'
@@ -27,7 +27,6 @@ export const PokemonItem = forwardRef<HTMLDivElement, PokemonItemProps>(function
   ref,
 ) {
   const [open, setOpen] = useState<boolean>(false)
-  const [play, { stop }] = useSound(pokemon.cries || [], { volume: 0.5 })
   const navigate = useNavigate()
   const mainColor = Color(getTypeColor(pokemon.types[0]))
 
@@ -36,23 +35,19 @@ export const PokemonItem = forwardRef<HTMLDivElement, PokemonItemProps>(function
     '--tw-hover-bg-color': mainColor.darken(0.2).hex(),
   } as React.CSSProperties
 
-  useEffect(() => {
-    if (!open) stop()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [open])
+  const onOpen = useCallback<MouseEventHandler>(() => setOpen(true), [])
 
   return (
     <>
       <Card
         key={pokemon.id}
-        onClick={() => setOpen(true)}
+        onClick={onOpen}
         ref={ref}
         className='pokemon-item hover:cursor-pointer shadow-md hover:shadow-lg opacity-100 min-h-16 transition-all duration-200 flex justify-between bg-[var(--tw-bg-color)] hover:bg-[var(--tw-hover-bg-color)] text-neutral-100 hover:scale-105 md:hover:scale-110'
         style={pokemonColorStyle}
       >
         <CardHeader className='items-start pr-0'>
           <CardTitle>
-            {' '}
             <span className='capitalize'>
               <span className='text-neutral-100'>#{formatDigits(pokemon.id)}</span> {replaceGenderSymbol(pokemon.name)}
             </span>
@@ -61,13 +56,20 @@ export const PokemonItem = forwardRef<HTMLDivElement, PokemonItemProps>(function
             <PokemonTypeBadges types={pokemon.types} />
           </CardDescription>
         </CardHeader>
-        <CardContent className='pt-10 pb-2 items-end relative h-fit self-end bottom-2'>
+        <CardContent className='pt-10 pb-2 items-end relative h-full flex-1 self-end bottom-2'>
           <img
             src='/assets/pokeball.png'
             alt='pokeball'
-            className='absolute w-4/5 h-4/5 bottom-0 right-3 opacity-40 rotate-[10deg]'
+            className='relative right-0 opacity-40 rotate-[10deg] bottom-0'
           />
-          {pokemon.image && <img src={pokemon.image} alt={pokemon.name} className='relative' />}
+          {pokemon.image && (
+            <Image
+              src={pokemon.image}
+              alt={pokemon.name}
+              containerClassName='absolute bottom-0 right-0'
+              className='absolute bottom-0 right-0 scale-110 h-40 w-40'
+            />
+          )}
         </CardContent>
       </Card>
       <Drawer onOpenChange={setOpen} open={open}>
@@ -82,14 +84,9 @@ export const PokemonItem = forwardRef<HTMLDivElement, PokemonItemProps>(function
             </span>
             {pokemon.image && <img src={pokemon.image} alt={pokemon.name} className='relative h-40' />}
             <PokemonTypeBadges types={pokemon.types} />
-            {pokemon.cries && (
-              <Button variant='ghost' onClick={() => play()} className='hover:bg-white/20 hover:text-neutral-100'>
-                <PlayIcon className='w-4 h-4' />
-              </Button>
-            )}
+            {pokemon.cries && <AudioPlayer src={pokemon.cries} />}
           </div>
           <DrawerFooter className='flex'>
-            {/* // TODO open details button here */}
             <Button
               variant='ghost'
               className='w-fit self-center hover:bg-white/10 hover:text-neutral-100'
@@ -97,9 +94,6 @@ export const PokemonItem = forwardRef<HTMLDivElement, PokemonItemProps>(function
             >
               See {pokemon.name} details
             </Button>
-            {/* <DrawerClose>
-              <Button variant='outline'>Cancel</Button>
-            </DrawerClose> */}
           </DrawerFooter>
         </DrawerContent>
       </Drawer>
