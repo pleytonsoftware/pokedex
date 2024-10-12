@@ -28,6 +28,7 @@ const items: DashboardItemProps[] = [
 export const DashboardPage: FC = () => {
   return (
     <div className='flex flex-col w-screen h-screen max-w-screen-lg mx-auto justify-center items-center'>
+      <h1 className='text-3xl font-bold font-pokemon-solid text-yellow-300 text-shadow-slate-900'>PokePleyt</h1>
       {items.map((item, index) => {
         const rendered = <DashboardItem key={index} title={item.title} to={item.to} />
 

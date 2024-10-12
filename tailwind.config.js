@@ -1,3 +1,5 @@
+const plugin = require('tailwindcss/plugin')
+
 /** @type {import('tailwindcss').Config} */
 export default {
 	darkMode: ["class"],
@@ -55,9 +57,63 @@ export default {
 				},
 			},
 			backgroundImage: {
-				'pokemon-type-gradient': 'linear-gradient(90deg, var(--tw-bg-color) 0%, var(--tw-bg-color) 20%, var(--tw-bg-secondary-color) 100%)',
+				'pokemon-type-gradient': 'linear-gradient(45deg, var(--tw-bg-color) 0%, var(--tw-bg-color) 15%, var(--tw-bg-secondary-color) 100%)',
+			},
+			fontFamily: {
+				'pokemon-solid': ['"Pokemon Solid"', 'sans-serif'],
+				'pokemon-hollow': ['"Pokemon Hollow"', 'sans-serif'],
 			}
 		}
 	},
-	plugins: [require("tailwindcss-animate")],
+	plugins: [
+		require("tailwindcss-animate"),
+		plugin(function ({ addUtilities, theme, e }) {
+			const colors = theme('colors');
+			const sizes = {
+				DEFAULT: '1px', // Default size (equivalent to "sm")
+				sm: '1px',
+				md: '2px',
+				lg: '3px',
+			};
+
+			const textShadowUtilities = Object.entries(colors).flatMap(([colorName, colorShades]) => {
+				if (typeof colorShades === 'object') {
+					return Object.entries(colorShades).flatMap(([shade, colorValue]) => {
+						return Object.entries(sizes).map(([size, offset]) => ({
+							// Default size if no size specified
+							[`.text-shadow-${colorName}-${shade}${size === 'DEFAULT' ? '' : `-${size}`}`]: {
+								textShadow: `
+                  ${colorValue} -${offset} -${offset} 0, 
+                  ${colorValue} ${offset} -${offset} 0, 
+                  ${colorValue} -${offset} ${offset} 0, 
+                  ${colorValue} ${offset} ${offset} 0`,
+							},
+						}));
+					});
+				}
+				return Object.entries(sizes).map(([size, offset]) => ({
+					[`.text-shadow-${colorName}${size === 'DEFAULT' ? '' : `-${size}`}`]: {
+						textShadow: `
+              ${colorShades} -${offset} -${offset} 0, 
+              ${colorShades} ${offset} -${offset} 0, 
+              ${colorShades} -${offset} ${offset} 0, 
+              ${colorShades} ${offset} ${offset} 0`,
+					},
+				}));
+			});
+
+			// Utility for CSS variable support
+			const variableTextShadowUtilities = Object.entries(sizes).map(([size, offset]) => ({
+				[`.text-shadow-var`]: {
+					textShadow: `
+            var(--tw-shadow-color) -${offset} -${offset} 0, 
+            var(--tw-shadow-color) ${offset} -${offset} 0, 
+            var(--tw-shadow-color) -${offset} ${offset} 0, 
+            var(--tw-shadow-color) ${offset} ${offset} 0`,
+				},
+			}));
+
+			addUtilities([...textShadowUtilities, ...variableTextShadowUtilities], ['responsive']);
+		}),
+	],
 }
