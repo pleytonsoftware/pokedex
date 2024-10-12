@@ -2,6 +2,8 @@ import type { FC } from 'react'
 
 import { Link } from 'react-router-dom'
 
+import { routerTree } from '@/router.tree'
+
 interface DashboardItemProps {
   title: string
   to: string
@@ -19,7 +21,7 @@ const DashboardItem: FC<DashboardItemProps> = ({ to, title }) => {
 const items: DashboardItemProps[] = [
   {
     title: 'Pokemon List',
-    to: '/pokemons',
+    to: routerTree.home.pokemons.index,
   },
 ]
 

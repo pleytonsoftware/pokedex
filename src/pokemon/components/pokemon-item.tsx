@@ -1,6 +1,6 @@
 import type { PokemonTypeInfo } from '../hooks/use-list-pokemon'
 
-import { MouseEventHandler, forwardRef, useCallback, useRef, useState } from 'react'
+import { MouseEventHandler, forwardRef, useCallback, useState } from 'react'
 import { useNavigate } from 'react-router'
 
 import Color from 'color'
@@ -11,8 +11,10 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/cor
 import { Drawer, DrawerContent, DrawerFooter } from '@/core/components/drawer'
 import { Image } from '@/core/components/image'
 import { formatDigits } from '@/core/utils/string'
+import { cn } from '@/lib/utils'
 import { PokemonTypeBadges } from '@/pokemon-types/components/types'
 import { getTypeColor } from '@/pokemon-types/utils/get-type'
+import { routerTree } from '@/router.tree'
 
 export interface PokemonItemProps {
   pokemonItem: PokemonTypeInfo
@@ -30,10 +32,13 @@ export const PokemonItem = forwardRef<HTMLDivElement, PokemonItemProps>(function
   const [imageLoaded, setImageLoaded] = useState<boolean>(false)
   const navigate = useNavigate()
   const mainColor = Color(getTypeColor(pokemon.types[0]))
+  const secondaryColor = pokemon.types.length > 1 ? Color(getTypeColor(pokemon.types[1])) : mainColor
 
   const pokemonColorStyle = {
     '--tw-bg-color': mainColor.hex(),
     '--tw-hover-bg-color': mainColor.darken(0.2).hex(),
+    '--tw-bg-secondary-color': secondaryColor.hex(),
+    '--tw-hover-bg-secondary-color': secondaryColor.darken(0.2).hex(),
   } as React.CSSProperties
 
   const onOpen = useCallback<MouseEventHandler>(() => setOpen(true), [])
@@ -44,7 +49,11 @@ export const PokemonItem = forwardRef<HTMLDivElement, PokemonItemProps>(function
         key={pokemon.id}
         onClick={onOpen}
         ref={ref}
-        className='pokemon-item hover:cursor-pointer shadow-md hover:shadow-lg opacity-100 min-h-16 transition-all duration-200 flex justify-between bg-[var(--tw-bg-color)] hover:bg-[var(--tw-hover-bg-color)] text-neutral-100 hover:scale-105 md:hover:scale-110'
+        className={cn(
+          'pokemon-item hover:cursor-pointer shadow-md hover:shadow-lg opacity-100 min-h-16 transition-all duration-200 flex justify-between text-neutral-100 hover:scale-105 md:hover:scale-110',
+          'bg-[var(--tw-bg-color)] hover:bg-[var(--tw-hover-bg-color)]',
+          'bg-pokemon-type-gradient',
+        )}
         style={pokemonColorStyle}
       >
         <CardHeader className='items-start pr-0'>
@@ -55,6 +64,11 @@ export const PokemonItem = forwardRef<HTMLDivElement, PokemonItemProps>(function
           </CardTitle>
           <CardDescription className='flex flex-col text-sm gap-1'>
             <PokemonTypeBadges types={pokemon.types} />
+            {pokemon.cries && (
+              <div className='-mx-4 my-2'>
+                <AudioPlayer src={pokemon.cries} mode='minimalist' />
+              </div>
+            )}
           </CardDescription>
         </CardHeader>
         <CardContent className='pt-10 pb-2 items-end relative h-full flex-1 self-end bottom-2'>
@@ -69,7 +83,7 @@ export const PokemonItem = forwardRef<HTMLDivElement, PokemonItemProps>(function
             <Image
               src={pokemon.image}
               alt={pokemon.name}
-              containerClassName='absolute bottom-0 right-0'
+              containerClassName='absolute bottom-0 right-0 justify-end'
               className='absolute bottom-0 right-0 scale-110 h-40 w-40'
               onLoad={() => setImageLoaded(true)}
             />
@@ -78,7 +92,7 @@ export const PokemonItem = forwardRef<HTMLDivElement, PokemonItemProps>(function
       </Card>
       <Drawer onOpenChange={setOpen} open={open}>
         <DrawerContent
-          className='min-h-[80vh] md:min-h-96 outline-none text-neutral-100 bg-[var(--tw-bg-color)] border-[var(--tw-bg-color)]'
+          className='min-h-[80vh] md:min-h-96 outline-none text-neutral-100 bg-[var(--tw-bg-color)] border-[var(--tw-bg-color)] bg-pokemon-type-gradient'
           style={pokemonColorStyle}
         >
           <div className='flex flex-col gap-4 justify-center items-center h-full'>
@@ -94,7 +108,7 @@ export const PokemonItem = forwardRef<HTMLDivElement, PokemonItemProps>(function
             <Button
               variant='ghost'
               className='w-fit self-center hover:bg-white/10 hover:text-neutral-100'
-              onClick={() => navigate(`/pokemon/${pokemon.name}`)}
+              onClick={() => navigate(routerTree.home.pokemons.details.replace(':id', pokemon.name))}
             >
               See {pokemon.name} details
             </Button>

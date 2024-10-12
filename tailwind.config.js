@@ -52,7 +52,10 @@ export default {
 					'3': 'hsl(var(--chart-3))',
 					'4': 'hsl(var(--chart-4))',
 					'5': 'hsl(var(--chart-5))'
-				}
+				},
+			},
+			backgroundImage: {
+				'pokemon-type-gradient': 'linear-gradient(90deg, var(--tw-bg-color) 0%, var(--tw-bg-color) 20%, var(--tw-bg-secondary-color) 100%)',
 			}
 		}
 	},

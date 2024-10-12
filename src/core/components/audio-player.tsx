@@ -1,6 +1,6 @@
 'use client'
 
-import { FC, useEffect, useRef, useState } from 'react'
+import { FC, MouseEventHandler, useEffect, useRef, useState } from 'react'
 
 import { Pause, Play, Volume2, VolumeX } from 'lucide-react'
 import { useLocalStorage } from 'usehooks-ts'
@@ -10,11 +10,17 @@ import { Slider } from './slider'
 
 export interface AudioPlayerProps {
   src: string
+  mode?: 'minimalist' | 'full'
   sliderProgressBar?: boolean
   withVolume?: boolean
 }
 
-export const AudioPlayer: FC<AudioPlayerProps> = ({ src, sliderProgressBar = false, withVolume = false }) => {
+export const AudioPlayer: FC<AudioPlayerProps> = ({
+  src,
+  mode = 'full',
+  sliderProgressBar = false,
+  withVolume = false,
+}) => {
   const [isPlaying, setIsPlaying] = useState(false)
   const [duration, setDuration] = useState(0)
   const [currentTime, setCurrentTime] = useState(0)
@@ -55,7 +61,8 @@ export const AudioPlayer: FC<AudioPlayerProps> = ({ src, sliderProgressBar = fal
     }
   }, [])
 
-  const togglePlay = () => {
+  const togglePlay: MouseEventHandler = (evt) => {
+    evt.stopPropagation()
     if (audioRef.current?.paused) {
       audioRef.current.play()
       setIsPlaying(true)
@@ -101,40 +108,54 @@ export const AudioPlayer: FC<AudioPlayerProps> = ({ src, sliderProgressBar = fal
     return `${minutes}:${seconds.toString().padStart(2, '0')}`
   }
 
-  return (
-    <div className='w-full max-w-md mx-auto bg-card text-card-foreground p-4 rounded-lg shadow-lg'>
-      <audio ref={audioRef} src={src} />
-      <div className='flex items-center justify-between mb-4'>
-        <Button variant='ghost' size='icon' onClick={togglePlay} aria-label={isPlaying ? 'Pause' : 'Play'}>
-          {isPlaying ? <Pause className='h-6 w-6' /> : <Play className='h-6 w-6' />}
-        </Button>
-        <div className='text-sm font-medium'>
-          {formatTime(currentTime)} / {formatTime(duration)}
-        </div>
-      </div>
-      {sliderProgressBar ? (
-        <Slider
-          value={[currentTime]}
-          max={duration}
-          step={0.1}
-          onValueChange={handleProgressChange}
-          className='mb-4 transition-all'
-          aria-label='Audio progress'
-        />
-      ) : (
-        <div className='relative mb-8'>
-          <div
-            className='absolute left-0 top-1/2 h-1 bg-primary transition-all duration-300 rounded-full translate-y-1/2'
-            style={{ width: `${(currentTime / duration) * 100}%` }}
-          />
-          <div className='absolute left-0 top-1/2 w-full h-1 bg-primary/20 rounded-full translate-y-1/2' />
-        </div>
-      )}
+  const isMinimalist = mode === 'minimalist'
+  const shouldShowVolume = !isMinimalist && withVolume
+  const PlayPause = isPlaying ? Pause : Play
+  const Volume = shouldShowVolume ? (isMuted ? VolumeX : Volume2) : null
 
-      {withVolume && (
-        <div className='flex items-center'>
+  return (
+    <div className='w-full max-w-md mx-auto text-neutral-100 p-4 rounded-lg bg-transparent'>
+      <audio ref={audioRef} src={src} />
+      <div className='flex items-center justify-between mb-4 gap-2'>
+        <Button
+          variant='ghost'
+          size='icon'
+          onClick={togglePlay}
+          aria-label={isPlaying ? 'Pause' : 'Play'}
+          className='hover:bg-white/30 text-neutral-100 hover:text-neutral-100'
+        >
+          <PlayPause className='icon' />
+        </Button>
+        {!isMinimalist && (
+          <div className='text-sm font-medium'>
+            {formatTime(currentTime)} / {formatTime(duration)}
+          </div>
+        )}
+      </div>
+      {!isMinimalist &&
+        (sliderProgressBar ? (
+          <Slider
+            value={[currentTime]}
+            max={duration}
+            step={0.1}
+            onValueChange={handleProgressChange}
+            className='mb-4 transition-all'
+            aria-label='Audio progress'
+          />
+        ) : (
+          <div className='relative mb-8'>
+            <div
+              className='absolute left-0 top-1/2 h-1 bg-neutral-100 transition-all duration-300 rounded-full translate-y-1/2'
+              style={{ width: `${(currentTime / duration) * 100}%` }}
+            />
+            <div className='absolute left-0 top-1/2 w-full h-1 bg-neutral-100/20 rounded-full translate-y-1/2' />
+          </div>
+        ))}
+
+      {shouldShowVolume && (
+        <div className='flex items-center gap-2'>
           <Button variant='ghost' size='icon' onClick={toggleMute} aria-label={isMuted ? 'Unmute' : 'Mute'}>
-            {isMuted ? <VolumeX className='h-5 w-5' /> : <Volume2 className='h-5 w-5' />}
+            {Volume && <Volume className='icon' />}
           </Button>
           <Slider
             value={[isMuted ? 0 : volume]}

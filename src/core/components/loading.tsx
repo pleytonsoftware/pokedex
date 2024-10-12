@@ -10,7 +10,7 @@ export interface LoadingProps {
 export const Loading: FC<LoadingProps> = ({ className }) => {
   return (
     <div className={cn('flex justify-center', className)}>
-      <Pokeball className='animate-spin w-4 h-4' />
+      <Pokeball className='animate-spin icon' />
     </div>
   )
 }
