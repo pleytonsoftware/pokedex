@@ -8,14 +8,18 @@ interface ImageLoaderProps extends ImgHTMLAttributes<HTMLImageElement> {
   containerClassName?: string
 }
 
-export const Image: FC<ImageLoaderProps> = ({ containerClassName, ...props }) => {
+export const Image: FC<ImageLoaderProps> = ({ containerClassName, onLoad, ...props }) => {
   const [isLoading, setIsLoading] = useState<boolean>(true)
   const [deferredLoaded, setDeferredLoaded] = useDebounceValue<boolean>(isLoading, 300)
 
-  const handleImageLoad = useCallback<ReactEventHandler<HTMLImageElement>>(() => {
-    setIsLoading(false)
-    setDeferredLoaded(false)
-  }, [setDeferredLoaded])
+  const handleImageLoad = useCallback<ReactEventHandler<HTMLImageElement>>(
+    (evt) => {
+      setIsLoading(false)
+      setDeferredLoaded(false)
+      onLoad?.(evt)
+    },
+    [onLoad, setDeferredLoaded],
+  )
 
   const randomAnimationSpeed = useMemo(() => `${Math.floor(Math.random() * 1500) + 1000}ms`, [])
 

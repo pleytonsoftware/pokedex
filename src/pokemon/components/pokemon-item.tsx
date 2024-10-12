@@ -1,6 +1,6 @@
 import type { PokemonTypeInfo } from '../hooks/use-list-pokemon'
 
-import { MouseEventHandler, forwardRef, useCallback, useState } from 'react'
+import { MouseEventHandler, forwardRef, useCallback, useRef, useState } from 'react'
 import { useNavigate } from 'react-router'
 
 import Color from 'color'
@@ -27,6 +27,7 @@ export const PokemonItem = forwardRef<HTMLDivElement, PokemonItemProps>(function
   ref,
 ) {
   const [open, setOpen] = useState<boolean>(false)
+  const [imageLoaded, setImageLoaded] = useState<boolean>(false)
   const navigate = useNavigate()
   const mainColor = Color(getTypeColor(pokemon.types[0]))
 
@@ -57,17 +58,20 @@ export const PokemonItem = forwardRef<HTMLDivElement, PokemonItemProps>(function
           </CardDescription>
         </CardHeader>
         <CardContent className='pt-10 pb-2 items-end relative h-full flex-1 self-end bottom-2'>
-          <img
-            src='/assets/pokeball.png'
-            alt='pokeball'
-            className='relative right-0 opacity-40 rotate-[10deg] bottom-0'
-          />
+          {imageLoaded && (
+            <img
+              src='/assets/pokeball.png'
+              alt='pokeball'
+              className='absolute right-0 opacity-40 rotate-[30deg] bottom-0 w-40 h-40'
+            />
+          )}
           {pokemon.image && (
             <Image
               src={pokemon.image}
               alt={pokemon.name}
               containerClassName='absolute bottom-0 right-0'
               className='absolute bottom-0 right-0 scale-110 h-40 w-40'
+              onLoad={() => setImageLoaded(true)}
             />
           )}
         </CardContent>
