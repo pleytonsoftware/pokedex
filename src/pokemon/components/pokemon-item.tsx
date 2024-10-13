@@ -67,10 +67,10 @@ export const PokemonItem = forwardRef<HTMLDivElement, PokemonItemProps>(function
               <span className='text-neutral-100'>#{formatDigits(pokemon.id)}</span> {replaceGenderSymbol(pokemon.name)}
             </span>
           </CardTitle>
-          <CardDescription className='flex flex-col text-sm gap-1'>
+          <CardDescription className='flex flex-col text-sm gap-4 w-full justify-center items-center md:items-baseline pt-2 md:pt-0'>
             <PokemonTypeBadges types={pokemon.types} />
             {crySoundPath && (
-              <div className='-mx-4 my-2'>
+              <div className='w-full [&>div]:p-0 md:-mx-4 md:my-2'>
                 <AudioPlayer src={crySoundPath} mode='minimalist' audioProps={{ preload: 'none' }} />
               </div>
             )}

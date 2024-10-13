@@ -40,8 +40,8 @@ export const PokemonList: FC<PokemonListProps> = ({ data, isLoading, error }) =>
   // }, [offset])
 
   return (
-    <div className='flex flex-col mx-auto lg:max-w-screen-lg p-4'>
-      <section className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4'>
+    <div className='flex flex-col mx-auto max-w-screen-2xl p-4'>
+      <section className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4'>
         {data?.results
           .slice(0, offset + pageSize)
           .map((pokemon) => <PokemonItemCard ref={ref} name={pokemon.name} key={pokemon.name} />)}

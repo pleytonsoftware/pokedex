@@ -118,7 +118,12 @@ export const AudioPlayer: FC<AudioPlayerProps> = ({
   const Volume = shouldShowVolume ? (isMuted ? VolumeX : Volume2) : null
 
   return (
-    <div className='w-full max-w-md mx-auto text-neutral-100 p-4 rounded-lg bg-transparent'>
+    <div
+      className={cn(
+        'w-full max-w-md mx-auto text-neutral-100 p-4 rounded-lg bg-transparent',
+        isMinimalist && 'flex justify-center',
+      )}
+    >
       <audio autoPlay={false} preload='none' {...audioProps} ref={audioRef}>
         <source src={src} type='audio/mp3' />
       </audio>
@@ -151,7 +156,7 @@ export const AudioPlayer: FC<AudioPlayerProps> = ({
         ) : (
           <div className='relative mb-8'>
             <div
-              className='absolute left-0 top-1/2 h-1 bg-neutral-100 transition-all duration-300 rounded-full translate-y-1/2'
+              className='absolute left-0 top-1/2 h-1 bg-neutral-100 transition-all duration-200 rounded-full translate-y-1/2'
               style={{ width: `${(currentTime / duration) * 100}%` }}
             />
             <div className='absolute left-0 top-1/2 w-full h-1 bg-neutral-100/20 rounded-full translate-y-1/2' />
