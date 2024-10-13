@@ -1,4 +1,4 @@
-import { type FC, type ImgHTMLAttributes, ReactEventHandler, useCallback, useMemo, useState } from 'react'
+import { type ImgHTMLAttributes, ReactEventHandler, forwardRef, useCallback, useMemo, useState } from 'react'
 
 import { useDebounceValue } from 'usehooks-ts'
 
@@ -8,7 +8,10 @@ interface ImageLoaderProps extends ImgHTMLAttributes<HTMLImageElement> {
   containerClassName?: string
 }
 
-export const Image: FC<ImageLoaderProps> = ({ containerClassName, onLoad, ...props }) => {
+export const Image = forwardRef<HTMLImageElement, ImageLoaderProps>(function Image(
+  { containerClassName, onLoad, ...props },
+  ref,
+) {
   const [isLoading, setIsLoading] = useState<boolean>(true)
   const [deferredLoaded, setDeferredLoaded] = useDebounceValue<boolean>(isLoading, 300)
 
@@ -34,6 +37,7 @@ export const Image: FC<ImageLoaderProps> = ({ containerClassName, onLoad, ...pro
         />
       )}
       <img
+        ref={ref}
         onLoad={handleImageLoad}
         className={cn(
           'transition-opacity duration-300 w-full h-full object-cover opacity-100',
@@ -43,4 +47,4 @@ export const Image: FC<ImageLoaderProps> = ({ containerClassName, onLoad, ...pro
       />
     </div>
   )
-}
+})

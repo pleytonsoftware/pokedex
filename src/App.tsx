@@ -2,6 +2,8 @@ import { useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Outlet } from 'react-router'
 
+import { Header } from './core/layout/header'
+
 function App() {
   const { i18n } = useTranslation('common')
   useEffect(() => {
@@ -11,10 +13,13 @@ function App() {
   }, [i18n.resolvedLanguage])
 
   return (
-    <main className='relative'>
-      <img src='/assets/pokeball.png' alt='pokeball' className='fixed w-56 h-56 top-4 right-4 -z-10 rotate-[30deg]' />
-      <Outlet />
-    </main>
+    <>
+      <Header />
+      <main className='relative pt-16'>
+        <img src='/assets/pokeball.png' alt='pokeball' className='fixed w-56 h-56 top-4 right-4 -z-10 rotate-[30deg]' />
+        <Outlet />
+      </main>
+    </>
   )
 }
 

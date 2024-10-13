@@ -18,6 +18,10 @@ export const PokemonItemCard = memo(
       renderElement = <PokemonCardItemLoading />
     }
 
+    console.log({
+      latest: data?.cries.latest,
+    })
+
     if (data) {
       renderElement = (
         <PokemonItem

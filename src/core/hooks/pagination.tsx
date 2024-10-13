@@ -5,7 +5,7 @@ interface UsePaginationProps {
   pageSize: number
 }
 
-interface UsePaginationReturn {
+export interface UsePaginationReturn {
   currentPage: number
   pageSize: number
   offset: number

@@ -62,7 +62,11 @@ export default {
 			fontFamily: {
 				'pokemon-solid': ['"Pokemon Solid"', 'sans-serif'],
 				'pokemon-hollow': ['"Pokemon Hollow"', 'sans-serif'],
+				'montserrat': ['Montserrat', 'sans-serif'],
 			}
+		},
+		fontFamily: {
+			'sans': ['Montserrat', 'ui-sans-serif', 'system-ui'],
 		}
 	},
 	plugins: [
@@ -75,41 +79,57 @@ export default {
 				md: '2px',
 				lg: '3px',
 			};
+			const classNameUtil = 'shadowed-text'
 
 			const textShadowUtilities = Object.entries(colors).flatMap(([colorName, colorShades]) => {
 				if (typeof colorShades === 'object') {
 					return Object.entries(colorShades).flatMap(([shade, colorValue]) => {
 						return Object.entries(sizes).map(([size, offset]) => ({
-							// Default size if no size specified
-							[`.text-shadow-${colorName}-${shade}${size === 'DEFAULT' ? '' : `-${size}`}`]: {
+							// Using the new class name prefix
+							[`.${classNameUtil}-${colorName}-${shade}${size === 'DEFAULT' ? '' : `-${size}`}`]: {
 								textShadow: `
                   ${colorValue} -${offset} -${offset} 0, 
                   ${colorValue} ${offset} -${offset} 0, 
                   ${colorValue} -${offset} ${offset} 0, 
-                  ${colorValue} ${offset} ${offset} 0`,
+                  ${colorValue} ${offset} ${offset} 0,
+                  ${colorValue} -${offset / 2} -${offset / 2} 0,
+                  ${colorValue} ${offset / 2} -${offset / 2} 0,
+                  ${colorValue} -${offset / 2} ${offset / 2} 0,
+                  ${colorValue} ${offset / 2} ${offset / 2} 0
+                `,
 							},
 						}));
 					});
 				}
 				return Object.entries(sizes).map(([size, offset]) => ({
-					[`.text-shadow-${colorName}${size === 'DEFAULT' ? '' : `-${size}`}`]: {
+					[`.${classNameUtil}-${colorName}${size === 'DEFAULT' ? '' : `-${size}`}`]: {
 						textShadow: `
               ${colorShades} -${offset} -${offset} 0, 
               ${colorShades} ${offset} -${offset} 0, 
               ${colorShades} -${offset} ${offset} 0, 
-              ${colorShades} ${offset} ${offset} 0`,
+              ${colorShades} ${offset} ${offset} 0,
+              ${colorShades} -${offset / 2} -${offset / 2} 0,
+              ${colorShades} ${offset / 2} -${offset / 2} 0,
+              ${colorShades} -${offset / 2} ${offset / 2} 0,
+              ${colorShades} ${offset / 2} ${offset / 2} 0
+            `,
 					},
 				}));
 			});
 
 			// Utility for CSS variable support
 			const variableTextShadowUtilities = Object.entries(sizes).map(([size, offset]) => ({
-				[`.text-shadow-var`]: {
+				[`.${classNameUtil}-var`]: {
 					textShadow: `
             var(--tw-shadow-color) -${offset} -${offset} 0, 
             var(--tw-shadow-color) ${offset} -${offset} 0, 
             var(--tw-shadow-color) -${offset} ${offset} 0, 
-            var(--tw-shadow-color) ${offset} ${offset} 0`,
+            var(--tw-shadow-color) ${offset} ${offset} 0,
+            var(--tw-shadow-color) -${offset / 2} -${offset / 2} 0,
+            var(--tw-shadow-color) ${offset / 2} -${offset / 2} 0,
+            var(--tw-shadow-color) -${offset / 2} ${offset / 2} 0,
+            var(--tw-shadow-color) ${offset / 2} ${offset / 2} 0
+          `,
 				},
 			}));
 

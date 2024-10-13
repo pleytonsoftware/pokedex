@@ -1,9 +1,11 @@
 'use client'
 
-import { FC, MouseEventHandler, useEffect, useRef, useState } from 'react'
+import { type AudioHTMLAttributes, type FC, type MouseEventHandler, useEffect, useRef, useState } from 'react'
 
 import { Pause, Play, Volume2, VolumeX } from 'lucide-react'
 import { useLocalStorage } from 'usehooks-ts'
+
+import { cn } from '@/lib/utils'
 
 import { Button } from './button'
 import { Slider } from './slider'
@@ -13,6 +15,7 @@ export interface AudioPlayerProps {
   mode?: 'minimalist' | 'full'
   sliderProgressBar?: boolean
   withVolume?: boolean
+  audioProps?: AudioHTMLAttributes<HTMLAudioElement>
 }
 
 export const AudioPlayer: FC<AudioPlayerProps> = ({
@@ -20,6 +23,7 @@ export const AudioPlayer: FC<AudioPlayerProps> = ({
   mode = 'full',
   sliderProgressBar = false,
   withVolume = false,
+  audioProps,
 }) => {
   const [isPlaying, setIsPlaying] = useState(false)
   const [duration, setDuration] = useState(0)
@@ -115,8 +119,10 @@ export const AudioPlayer: FC<AudioPlayerProps> = ({
 
   return (
     <div className='w-full max-w-md mx-auto text-neutral-100 p-4 rounded-lg bg-transparent'>
-      <audio ref={audioRef} src={src} />
-      <div className='flex items-center justify-between mb-4 gap-2'>
+      <audio autoPlay={false} preload='none' {...audioProps} ref={audioRef}>
+        <source src={src} type='audio/mp3' />
+      </audio>
+      <div className={cn('flex items-center justify-between mb-4 gap-2', isMinimalist && 'justify-center')}>
         <Button
           variant='ghost'
           size='icon'

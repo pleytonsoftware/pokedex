@@ -1,24 +1,24 @@
 import { type FC } from 'react'
 
-import gsap from 'gsap'
-import ScrollTrigger from 'gsap/ScrollTrigger'
+// import gsap from 'gsap'
+// import ScrollTrigger from 'gsap/ScrollTrigger'
 import { useIntersectionObserver } from 'usehooks-ts'
 
 import { Alert, AlertDescription, AlertTitle } from '@/core/components/alert'
 import { Loading } from '@/core/components/loading'
-import { usePagination } from '@/core/hooks/pagination'
-import { useGSAP } from '@gsap/react'
+import { usePaginationContext } from '@/core/hooks/pagination-context'
+
+// import { useGSAP } from '@gsap/react'
 
 import { usePokemonList } from '../hooks/use-list-pokemon'
 import { PokemonItemCard } from './pokemon-item-card'
 
-gsap.registerPlugin(ScrollTrigger)
+// gsap.registerPlugin(ScrollTrigger)
 
-export interface PokemonListProps {}
+export interface PokemonListProps extends Pick<ReturnType<typeof usePokemonList>, 'data' | 'isLoading' | 'error'> {}
 
-export const PokemonList: FC<PokemonListProps> = () => {
-  const { offset, pageSize, nextPage } = usePagination({ initialPage: 1, pageSize: 3 * 5 })
-  const { data, isLoading, error } = usePokemonList()
+export const PokemonList: FC<PokemonListProps> = ({ data, isLoading, error }) => {
+  const { nextPage, offset, pageSize } = usePaginationContext()
   const [ref] = useIntersectionObserver({
     threshold: 0.1,
     onChange: (isIntersecting) => {
@@ -27,16 +27,17 @@ export const PokemonList: FC<PokemonListProps> = () => {
     },
   })
 
-  useGSAP(() => {
-    ScrollTrigger.batch('.pokemon-item', {
-      interval: 0.1,
-      batchMax: 3,
-      onEnter: (batch) => gsap.to(batch, { autoAlpha: 1, stagger: 0.1, overwrite: true }),
-      onLeave: (batch) => gsap.set(batch, { autoAlpha: 0, overwrite: true }),
-      onEnterBack: (batch) => gsap.to(batch, { autoAlpha: 1, stagger: 0.1, overwrite: true }),
-      onLeaveBack: (batch) => gsap.set(batch, { autoAlpha: 0, overwrite: true }),
-    })
-  }, [offset])
+  // ! GSAP when scrolling, items start disappearing
+  // useGSAP(() => {
+  //   ScrollTrigger.batch('.pokemon-item', {
+  //     interval: 0.1,
+  //     batchMax: 3,
+  //     onEnter: (batch) => gsap.to(batch, { autoAlpha: 1, stagger: 0.1, overwrite: true }),
+  //     onLeave: (batch) => gsap.set(batch, { autoAlpha: 0, overwrite: true }),
+  //     onEnterBack: (batch) => gsap.to(batch, { autoAlpha: 1, stagger: 0.1, overwrite: true }),
+  //     onLeaveBack: (batch) => gsap.set(batch, { autoAlpha: 0, overwrite: true }),
+  //   })
+  // }, [offset])
 
   return (
     <div className='flex flex-col mx-auto lg:max-w-screen-lg p-4'>

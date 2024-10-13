@@ -1,6 +1,6 @@
 import type { PokemonTypeInfo } from '../hooks/use-list-pokemon'
 
-import { MouseEventHandler, forwardRef, useCallback, useState } from 'react'
+import { type MouseEventHandler, forwardRef, useCallback, useMemo, useState } from 'react'
 import { useNavigate } from 'react-router'
 
 import Color from 'color'
@@ -8,7 +8,7 @@ import Color from 'color'
 import { AudioPlayer } from '@/core/components/audio-player'
 import { Button } from '@/core/components/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/core/components/card'
-import { Drawer, DrawerContent, DrawerFooter } from '@/core/components/drawer'
+import { Drawer, DrawerContent, DrawerFooter, DrawerTitle } from '@/core/components/drawer'
 import { Image } from '@/core/components/image'
 import { formatDigits } from '@/core/utils/string'
 import { cn } from '@/lib/utils'
@@ -33,6 +33,11 @@ export const PokemonItem = forwardRef<HTMLDivElement, PokemonItemProps>(function
   const navigate = useNavigate()
   const mainColor = Color(getTypeColor(pokemon.types[0]))
   const secondaryColor = pokemon.types.length > 1 ? Color(getTypeColor(pokemon.types[1])) : mainColor
+  const sound = useMemo(
+    () => pokemon.cries?.split('/').slice(-2).join('/').split('.').slice(0, 1)?.[0],
+    [pokemon.cries],
+  )
+  const crySoundPath = sound && `/assets/cries/${sound}.mp3`
 
   const pokemonColorStyle = {
     '--tw-bg-color': mainColor.hex(),
@@ -50,13 +55,13 @@ export const PokemonItem = forwardRef<HTMLDivElement, PokemonItemProps>(function
         onClick={onOpen}
         ref={ref}
         className={cn(
-          'pokemon-item hover:cursor-pointer shadow-md hover:shadow-lg opacity-100 min-h-16 transition-all duration-200 flex justify-between text-neutral-100 hover:scale-105 md:hover:scale-110',
-          'bg-[var(--tw-bg-color)] hover:bg-[var(--tw-hover-bg-color)]',
-          'bg-pokemon-type-gradient',
+          'pokemon-item hover:cursor-pointer shadow-md hover:shadow-lg opacity-100 transition-all duration-200 flex justify-between text-neutral-100 bg-pokemon-type-gradient',
+          'flex-col md:flex-row',
+          'md:hover:scale-110',
         )}
         style={pokemonColorStyle}
       >
-        <CardHeader className='items-start pr-0'>
+        <CardHeader className='items-center md:items-start md:pr-0 order-2 md:order-1'>
           <CardTitle>
             <span className='capitalize'>
               <span className='text-neutral-100'>#{formatDigits(pokemon.id)}</span> {replaceGenderSymbol(pokemon.name)}
@@ -64,14 +69,14 @@ export const PokemonItem = forwardRef<HTMLDivElement, PokemonItemProps>(function
           </CardTitle>
           <CardDescription className='flex flex-col text-sm gap-1'>
             <PokemonTypeBadges types={pokemon.types} />
-            {pokemon.cries && (
+            {crySoundPath && (
               <div className='-mx-4 my-2'>
-                <AudioPlayer src={pokemon.cries} mode='minimalist' />
+                <AudioPlayer src={crySoundPath} mode='minimalist' audioProps={{ preload: 'none' }} />
               </div>
             )}
           </CardDescription>
         </CardHeader>
-        <CardContent className='pt-10 pb-2 items-end relative h-full flex-1 self-end bottom-2'>
+        <CardContent className='pt-10 pb-2 items-end relative flex-1 self-end bottom-2 order-1 md:order-2 w-full md:w-auto md:h-full min-h-40 h-fit md:min-h-0 max-h-40 md:max-h-full [&_img]:right-0 [&_img]:left-0 [&_img]:mx-auto [&>img]:-bottom-4'>
           {imageLoaded && (
             <img
               src='/assets/pokeball.png'
@@ -92,17 +97,19 @@ export const PokemonItem = forwardRef<HTMLDivElement, PokemonItemProps>(function
       </Card>
       <Drawer onOpenChange={setOpen} open={open}>
         <DrawerContent
-          className='min-h-[80vh] md:min-h-96 outline-none text-neutral-100 bg-[var(--tw-bg-color)] border-[var(--tw-bg-color)] bg-pokemon-type-gradient'
+          className='min-h-[80vh] md:min-h-96 outline-none text-neutral-100 bg-[var(--tw-bg-color)] border-none bg-pokemon-type-gradient'
           style={pokemonColorStyle}
         >
-          <div className='flex flex-col gap-4 justify-center items-center h-full'>
+          <DrawerTitle className='flex flex-col gap-4 justify-center items-center h-full mt-4'>
             <span className='flex gap-2'>
               <span className='text-3xl capitalize'>{replaceGenderSymbol(pokemon.name)}</span>
               <span className='text-xs mt-1'>#{formatDigits(pokemon.id)}</span>
             </span>
+          </DrawerTitle>
+          <div className='flex flex-col gap-4 justify-center items-center h-full mt-4'>
             {pokemon.image && <img src={pokemon.image} alt={pokemon.name} className='relative h-40' />}
             <PokemonTypeBadges types={pokemon.types} />
-            {pokemon.cries && <AudioPlayer src={pokemon.cries} />}
+            {crySoundPath && <AudioPlayer src={crySoundPath} />}
           </div>
           <DrawerFooter className='flex'>
             <Button
