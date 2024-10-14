@@ -3,7 +3,7 @@
 import { type AudioHTMLAttributes, type FC, type MouseEventHandler, useEffect, useRef, useState } from 'react'
 
 import { Pause, Play, Volume2, VolumeX } from 'lucide-react'
-import { useLocalStorage } from 'usehooks-ts'
+import { useDebounceCallback, useLocalStorage } from 'usehooks-ts'
 
 import { cn } from '@/lib/utils'
 
@@ -30,6 +30,10 @@ export const AudioPlayer: FC<AudioPlayerProps> = ({
   const [currentTime, setCurrentTime] = useState(0)
   const [volume, setVolume] = useLocalStorage('volume', 1)
   const [isMuted, setIsMuted] = useState(false)
+  const debounceReset = useDebounceCallback(() => {
+    setCurrentTime(0)
+    if (audioRef.current) audioRef.current.currentTime = 0
+  }, 300)
 
   const audioRef = useRef<HTMLAudioElement | null>(null)
 
@@ -37,7 +41,9 @@ export const AudioPlayer: FC<AudioPlayerProps> = ({
     const audio = audioRef.current
     if (!audio) return
 
-    const setAudioTime = () => setCurrentTime(audio.currentTime)
+    const setAudioTime = () => {
+      setCurrentTime(audio.currentTime)
+    }
 
     const setAudioData = () => {
       setDuration(audio.duration)
@@ -46,10 +52,14 @@ export const AudioPlayer: FC<AudioPlayerProps> = ({
 
     const handleEnded = () => {
       setIsPlaying(false)
-      setCurrentTime(0)
-      if (audio) {
-        audio.currentTime = 0
+      setCurrentTime(duration) // Set currentTime to the end
+
+      // Avoid resetting to 0 after finishing
+      if (audioRef.current) {
+        audioRef.current.currentTime = duration
       }
+
+      debounceReset()
     }
 
     // Events
@@ -63,7 +73,7 @@ export const AudioPlayer: FC<AudioPlayerProps> = ({
       audio.removeEventListener('timeupdate', setAudioTime)
       audio.removeEventListener('ended', handleEnded)
     }
-  }, [])
+  }, [debounceReset, duration])
 
   const togglePlay: MouseEventHandler = (evt) => {
     evt.stopPropagation()
@@ -124,7 +134,7 @@ export const AudioPlayer: FC<AudioPlayerProps> = ({
         isMinimalist && 'flex justify-center',
       )}
     >
-      <audio autoPlay={false} preload='none' {...audioProps} ref={audioRef}>
+      <audio autoPlay={false} {...audioProps} ref={audioRef}>
         <source src={src} type='audio/mp3' />
       </audio>
       <div className={cn('flex items-center justify-between mb-4 gap-2', isMinimalist && 'justify-center')}>
@@ -156,7 +166,7 @@ export const AudioPlayer: FC<AudioPlayerProps> = ({
         ) : (
           <div className='relative mb-8'>
             <div
-              className='absolute left-0 top-1/2 h-1 bg-neutral-100 transition-all duration-200 rounded-full translate-y-1/2'
+              className='absolute left-0 top-1/2 h-1 bg-neutral-100 transition-all duration-300 rounded-full translate-y-1/2'
               style={{ width: `${(currentTime / duration) * 100}%` }}
             />
             <div className='absolute left-0 top-1/2 w-full h-1 bg-neutral-100/20 rounded-full translate-y-1/2' />

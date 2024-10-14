@@ -70,7 +70,7 @@
 
 @layer components {
   .pokemon-item {
-    @apply h-fit md:h-40;
+    @apply h-fit md:h-44;
   }
 
   .icon {

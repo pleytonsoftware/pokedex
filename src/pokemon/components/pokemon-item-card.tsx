@@ -2,14 +2,15 @@ import { type ReactNode, forwardRef, memo } from 'react'
 
 import { useGetPokemon } from '../hooks/use-get-pokemon'
 import { PokemonCardItemLoading } from './pokemon-card-item-loading'
-import { PokemonItem } from './pokemon-item'
+import { PokemonItem, type PokemonItemProps } from './pokemon-item'
 
 export interface PokemonItemCardProps {
   name: string
+  onItemClick?: PokemonItemProps['onItemClick']
 }
 
 export const PokemonItemCard = memo(
-  forwardRef<HTMLDivElement, PokemonItemCardProps>(function PokemonItemCard({ name }, ref) {
+  forwardRef<HTMLDivElement, PokemonItemCardProps>(function PokemonItemCard({ name, onItemClick }, ref) {
     const { data, isLoading } = useGetPokemon(name)
 
     let renderElement: ReactNode = null
@@ -21,6 +22,7 @@ export const PokemonItemCard = memo(
     if (data) {
       renderElement = (
         <PokemonItem
+          onItemClick={onItemClick}
           pokemonItem={{
             id: data.id,
             name: data.name,
