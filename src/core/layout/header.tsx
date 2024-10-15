@@ -20,7 +20,7 @@ export const Header: FC = () => {
   const fallback = useRef<string>(generateAvatarFallbackTEMP())
 
   return (
-    <header className='fixed top-0 left-0 backdrop-blur-md p-4 py-2 z-10 border-b bg-blue-900/50 border-yellow-300 w-full flex items-center justify-between'>
+    <header className='sticky top-0 left-0 backdrop-blur-md p-4 py-2 z-10 border-b bg-blue-900/50 border-yellow-300 w-full flex items-center justify-between'>
       <Link to={routerTree.home.index}>
         <img src='/assets/pokepleyt.png' alt='pokepleyt' className='h-12' />
         <TypographyH3 className='sr-only'>pokepleyt</TypographyH3>
