@@ -8,9 +8,6 @@ importers:
 
   .:
     dependencies:
-      '@gsap/react':
-        specifier: ^2.1.1
-        version: 2.1.1
       '@radix-ui/react-avatar':
         specifier: ^1.1.1
         version: 1.1.1(@types/react-dom@18.3.0)(@types/react@18.3.11)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -53,9 +50,6 @@ importers:
       color:
         specifier: ^4.2.3
         version: 4.2.3
-      gsap:
-        specifier: ^3.12.5
-        version: 3.12.5
       i18next:
         specifier: ^23.15.2
         version: 23.15.2
@@ -86,9 +80,6 @@ importers:
       react-i18next:
         specifier: ^15.0.2
         version: 15.0.2(i18next@23.15.2)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
-      react-infinite-scroller:
-        specifier: ^1.2.6
-        version: 1.2.6(react@18.3.1)
       react-router:
         specifier: '6'
         version: 6.26.2(react@18.3.1)
@@ -135,9 +126,6 @@ importers:
       '@types/react-dom':
         specifier: ^18.3.0
         version: 18.3.0
-      '@types/react-infinite-scroller':
-        specifier: ^1.2.5
-        version: 1.2.5
       '@typescript-eslint/eslint-plugin':
         specifier: ^7.18.0
         version: 7.18.0(@typescript-eslint/parser@7.18.0(eslint@8.57.1)(typescript@5.6.2))(eslint@8.57.1)(typescript@5.6.2)
@@ -464,9 +452,6 @@ packages:
   '@eslint/js@8.57.1':
     resolution: {integrity: sha512-d9zaMRSTIKDLhctzH12MtXvJKSSUhaHcjV+2Z+GK+EEY7XKpP5yR4x+N3TAcHTcu963nIr+TMcCb4DBCYX1z6Q==}
     engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
-
-  '@gsap/react@2.1.1':
-    resolution: {integrity: sha512-apGPRrmpqxvl1T6Io1KgT8tFU+IuACI6z4zmT7t8+PASserJeLVRFJdSNUFA2Xb/eVkZI1noE8LIrY/w/oJECw==}
 
   '@humanwhocodes/config-array@0.13.0':
     resolution: {integrity: sha512-DZLEEqFWQFiyK6h5YIeynKx7JlvCYWL0cImfSRXZ9l4Sg2efkFGTuFf6vzXjK1cq6IYkU+Eg/JizXw+TD2vRNw==}
@@ -1095,9 +1080,6 @@ packages:
 
   '@types/react-dom@18.3.0':
     resolution: {integrity: sha512-EhwApuTmMBmXuFOikhQLIBUn6uFg81SwLMOAUgodJF14SOBOCMdU04gDoYi0WOJJHD144TL32z4yDqCW3dnkQg==}
-
-  '@types/react-infinite-scroller@1.2.5':
-    resolution: {integrity: sha512-fJU1jhMgoL6NJFrqTM0Ob7tnd2sQWGxe2ESwiU6FZWbJK/VO/Er5+AOhc+e2zbT0dk5pLygqctsulOLJ8xnSzw==}
 
   '@types/react@18.3.11':
     resolution: {integrity: sha512-r6QZ069rFTjrEYgFdOck1gK7FLVsgJE7tTz0pQBczlBNUhBNk0MQH4UbnFSwjpQLMkLzgqvBBa+qGpLje16eTQ==}
@@ -1907,9 +1889,6 @@ packages:
   graphemer@1.4.0:
     resolution: {integrity: sha512-EtKwoO6kxCL9WO5xipiHTZlSzBm7WLT627TqC/uVRd0HKmq8NXyebnNYxDoBi7wt8eTWrUrKXCOVaFq9x1kgag==}
 
-  gsap@3.12.5:
-    resolution: {integrity: sha512-srBfnk4n+Oe/ZnMIOXt3gT605BX9x5+rh/prT2F1SsNJsU1XuMiP0E2aptW481OnonOGACZWBqseH5Z7csHxhQ==}
-
   has-bigints@1.0.2:
     resolution: {integrity: sha512-tSvCKtBr9lkF0Ex0aQiP9N+OpV4zi2r/Nee5VkRDbaqv35RLYMzbwQfFSZZH0kR+Rd6302UJZ2p/bJCEoR3VoQ==}
 
@@ -2485,11 +2464,6 @@ packages:
         optional: true
       react-native:
         optional: true
-
-  react-infinite-scroller@1.2.6:
-    resolution: {integrity: sha512-mGdMyOD00YArJ1S1F3TVU9y4fGSfVVl6p5gh/Vt4u99CJOptfVu/q5V/Wlle72TMgYlBwIhbxK5wF0C/R33PXQ==}
-    peerDependencies:
-      react: ^0.14.9 || ^15.3.0 || ^16.0.0 || ^17.0.0 || ^18.0.0
 
   react-is@16.13.1:
     resolution: {integrity: sha512-24e6ynE2H+OKt4kqsOvNd8kBpV65zoxbA4BVsEOB3ARVWQki/DHzaUoC5KuON/BiccDaCCTZBuOcfZs70kR8bQ==}
@@ -3264,11 +3238,6 @@ snapshots:
 
   '@eslint/js@8.57.1': {}
 
-  '@gsap/react@2.1.1':
-    dependencies:
-      gsap: 3.12.5
-      react: 18.3.1
-
   '@humanwhocodes/config-array@0.13.0':
     dependencies:
       '@humanwhocodes/object-schema': 2.0.3
@@ -3822,10 +3791,6 @@ snapshots:
   '@types/prop-types@15.7.13': {}
 
   '@types/react-dom@18.3.0':
-    dependencies:
-      '@types/react': 18.3.11
-
-  '@types/react-infinite-scroller@1.2.5':
     dependencies:
       '@types/react': 18.3.11
 
@@ -4863,8 +4828,6 @@ snapshots:
 
   graphemer@1.4.0: {}
 
-  gsap@3.12.5: {}
-
   has-bigints@1.0.2: {}
 
   has-flag@3.0.0: {}
@@ -5374,11 +5337,6 @@ snapshots:
       react: 18.3.1
     optionalDependencies:
       react-dom: 18.3.1(react@18.3.1)
-
-  react-infinite-scroller@1.2.6(react@18.3.1):
-    dependencies:
-      prop-types: 15.8.1
-      react: 18.3.1
 
   react-is@16.13.1: {}
 

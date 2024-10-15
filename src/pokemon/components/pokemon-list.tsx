@@ -1,11 +1,9 @@
 import type { PokemonItemInfo } from './pokemon-item'
 
 import { type FC, useMemo, useState } from 'react'
-import InfiniteScroll from 'react-infinite-scroller'
 import { useNavigate } from 'react-router'
 
-import gsap from 'gsap'
-import ScrollTrigger from 'gsap/ScrollTrigger'
+import { useIntersectionObserver } from 'usehooks-ts'
 
 import { Alert, AlertDescription, AlertTitle } from '@/core/components/alert'
 import { AudioPlayer } from '@/core/components/audio-player'
@@ -15,54 +13,40 @@ import { Loading } from '@/core/components/loading'
 import { usePaginationContext } from '@/core/hooks/pagination-context'
 import { PokemonTypeBadges } from '@/pokemon-types/components/types'
 import { routerTree } from '@/router.tree'
-import { useGSAP } from '@gsap/react'
 
 import { usePokemonList } from '../hooks/use-list-pokemon'
 import { PokemonItemCard } from './pokemon-item-card'
 
-gsap.registerPlugin(ScrollTrigger)
-
 export interface PokemonListProps extends Pick<ReturnType<typeof usePokemonList>, 'data' | 'isLoading' | 'error'> {}
 
 export const PokemonList: FC<PokemonListProps> = ({ data, isLoading, error }) => {
-  const { nextPage, offset, pageSize } = usePaginationContext()
+  const { nextPage, offset, pageSize, currentPage } = usePaginationContext()
   const [pokemonAtDrawer, setPokemonAtDrawer] = useState<PokemonItemInfo>()
   const navigate = useNavigate()
-
-  // ! GSAP when scrolling, items start disappearing
-  useGSAP(() => {
-    ScrollTrigger.batch('.pokemon-item', {
-      interval: 0.1,
-      batchMax: 3,
-      onEnter: (batch) => gsap.to(batch, { autoAlpha: 1, stagger: 0.1, overwrite: true }),
-      onLeave: (batch) => gsap.set(batch, { autoAlpha: 0, overwrite: true }),
-      onEnterBack: (batch) => gsap.to(batch, { autoAlpha: 1, stagger: 0.1, overwrite: true }),
-      onLeaveBack: (batch) => gsap.set(batch, { autoAlpha: 0, overwrite: true }),
-    })
-  }, [offset])
+  const [ref] = useIntersectionObserver({
+    threshold: 0.1,
+    onChange: (isIntersecting) => {
+      if (!isIntersecting) return
+      nextPage()
+    },
+  })
 
   const listRendered = useMemo(
     () => (
       <div className='flex flex-col mx-auto max-w-screen-2xl p-4'>
         {data?.count && (
-          <InfiniteScroll
-            pageStart={0}
-            loadMore={() => nextPage()}
-            initialLoad={false}
-            hasMore={data.count - (offset + pageSize) > 0}
-            loader={<Loading className='col-span-3 mt-4' />}
-            className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4'
-          >
+          <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4'>
             {data?.results
-              .slice(0, offset + pageSize)
+              .slice(currentPage - 1, offset + pageSize)
               .map((pokemon) => (
                 <PokemonItemCard
+                  ref={ref}
                   name={pokemon.name}
                   key={pokemon.name}
                   onItemClick={(_evt, pokemon) => setPokemonAtDrawer(pokemon)}
                 />
               ))}
-          </InfiniteScroll>
+          </div>
         )}
         {isLoading && <Loading className='mt-4' />}
         {error && (
@@ -73,14 +57,14 @@ export const PokemonList: FC<PokemonListProps> = ({ data, isLoading, error }) =>
         )}
       </div>
     ),
-    [data.count, data?.results, offset, pageSize, isLoading, error, nextPage],
+    [data?.count, data?.results, currentPage, offset, pageSize, isLoading, error, ref],
   )
 
   return (
     <>
       {listRendered}
-      {pokemonAtDrawer && (
-        <Drawer onOpenChange={() => setPokemonAtDrawer(undefined)} open={Boolean(pokemonAtDrawer)}>
+      <Drawer onOpenChange={() => setPokemonAtDrawer(undefined)} open={Boolean(pokemonAtDrawer)}>
+        {pokemonAtDrawer && (
           <DrawerContent
             aria-describedby='drawer-description'
             className='min-h-[80vh] md:min-h-96 outline-none text-neutral-100 bg-[var(--tw-bg-color)] border-none bg-pokemon-type-gradient'
@@ -111,8 +95,8 @@ export const PokemonList: FC<PokemonListProps> = ({ data, isLoading, error }) =>
               </Button>
             </DrawerFooter>
           </DrawerContent>
-        </Drawer>
-      )}
+        )}
+      </Drawer>
     </>
   )
 }

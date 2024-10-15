@@ -89,7 +89,7 @@ export const PokemonItem = forwardRef<HTMLDivElement, PokemonItemProps>(function
       )}
       style={pokemonColorStyle}
     >
-      <CardHeader className='w-1/2 items-center md:items-start md:pr-0 order-2 md:order-1'>
+      <CardHeader className='w-1/2 items-center self-center md:self-baseline md:items-start md:pr-0 order-2 md:order-1'>
         <CardTitle>
           <span className='capitalize'>
             <span className='text-neutral-100'>#{formatDigits(pokemon.id)}</span> {replaceGenderSymbol(pokemon.name)}
@@ -104,7 +104,7 @@ export const PokemonItem = forwardRef<HTMLDivElement, PokemonItemProps>(function
           )}
         </CardDescription>
       </CardHeader>
-      <CardContent className='w-1/2 pt-10 pb-2 items-end relative flex-1 self-end bottom-2 order-1 md:order-2 md:w-auto md:h-full min-h-40 h-fit md:min-h-0 max-h-40 md:max-h-full [&_img]:right-0 [&_img]:left-0 [&_img]:mx-auto [&>img]:-bottom-4'>
+      <CardContent className='w-1/2 pt-10 pb-2 items-end relative flex-1 self-center bottom-2 order-1 md:order-2 md:w-auto md:h-full min-h-40 h-fit md:min-h-0 max-h-40 md:max-h-full flex md:self-end [&_img]:right-0 [&_img]:left-0 [&_img]:mx-auto [&>img]:-bottom-4'>
         {imageLoaded && (
           <img
             src='/assets/pokeball.png'
