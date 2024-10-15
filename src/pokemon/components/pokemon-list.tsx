@@ -40,7 +40,7 @@ export const PokemonList: FC<PokemonListProps> = ({ data, isLoading, error }) =>
               .slice(0, offset + pageSize)
               .map((pokemon) => (
                 <PokemonItemCard
-                  ref={ref}
+                  parentIntersectionRef={ref}
                   name={pokemon.name}
                   key={pokemon.name}
                   onItemClick={(_evt, pokemon) => setPokemonAtDrawer(pokemon)}

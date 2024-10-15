@@ -1,5 +1,7 @@
 import { type ReactNode, forwardRef, memo } from 'react'
 
+import { useIntersectionObserver } from 'usehooks-ts'
+
 import { useGetPokemon } from '../hooks/use-get-pokemon'
 import { PokemonCardItemLoading } from './pokemon-card-item-loading'
 import { PokemonItem, type PokemonItemProps } from './pokemon-item'
@@ -7,11 +9,18 @@ import { PokemonItem, type PokemonItemProps } from './pokemon-item'
 export interface PokemonItemCardProps {
   name: string
   onItemClick?: PokemonItemProps['onItemClick']
+  parentIntersectionRef?: (node?: Element | null) => void
 }
 
 export const PokemonItemCard = memo(
-  forwardRef<HTMLDivElement, PokemonItemCardProps>(function PokemonItemCard({ name, onItemClick }, ref) {
-    const { data, isLoading } = useGetPokemon(name)
+  forwardRef<HTMLDivElement, PokemonItemCardProps>(function PokemonItemCard(
+    { name, onItemClick, parentIntersectionRef },
+    ref,
+  ) {
+    const [intersectionRef, isIntersecting] = useIntersectionObserver()
+    const { data, isLoading } = useGetPokemon(name, {
+      enabled: isIntersecting,
+    })
 
     let renderElement: ReactNode = null
 
@@ -38,8 +47,15 @@ export const PokemonItemCard = memo(
     }
 
     return (
-      <div className='pokemon-item' ref={ref}>
-        {renderElement || 'No item found'}
+      <div
+        className='pokemon-item'
+        ref={(el) => {
+          intersectionRef(el)
+          parentIntersectionRef?.(el)
+          return ref
+        }}
+      >
+        {isIntersecting ? renderElement || 'No item found' : null}
       </div>
     )
   }),
