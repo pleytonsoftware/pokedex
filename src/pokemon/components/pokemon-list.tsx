@@ -20,7 +20,7 @@ import { PokemonItemCard } from './pokemon-item-card'
 export interface PokemonListProps extends Pick<ReturnType<typeof usePokemonList>, 'data' | 'isLoading' | 'error'> {}
 
 export const PokemonList: FC<PokemonListProps> = ({ data, isLoading, error }) => {
-  const { nextPage, offset, pageSize, currentPage } = usePaginationContext()
+  const { nextPage, offset, pageSize } = usePaginationContext()
   const [pokemonAtDrawer, setPokemonAtDrawer] = useState<PokemonItemInfo>()
   const navigate = useNavigate()
   const [ref] = useIntersectionObserver({
@@ -37,7 +37,7 @@ export const PokemonList: FC<PokemonListProps> = ({ data, isLoading, error }) =>
         {data?.count && (
           <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4'>
             {data?.results
-              .slice(currentPage - 1, offset + pageSize)
+              .slice(0, offset + pageSize)
               .map((pokemon) => (
                 <PokemonItemCard
                   ref={ref}
@@ -57,7 +57,7 @@ export const PokemonList: FC<PokemonListProps> = ({ data, isLoading, error }) =>
         )}
       </div>
     ),
-    [data?.count, data?.results, currentPage, offset, pageSize, isLoading, error, ref],
+    [data?.count, data?.results, offset, pageSize, isLoading, error, ref],
   )
 
   return (

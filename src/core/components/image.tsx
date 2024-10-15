@@ -34,6 +34,7 @@ export const Image = forwardRef<HTMLImageElement, ImageLoaderProps>(function Ima
           alt='pokeball'
           className={cn('w-20 h-20 animate-spin transition-opacity opacity-0', isLoading && 'opacity-100')}
           style={{ animationDuration: randomAnimationSpeed }}
+          loading='lazy'
         />
       )}
       <img
@@ -43,6 +44,7 @@ export const Image = forwardRef<HTMLImageElement, ImageLoaderProps>(function Ima
           'transition-opacity duration-300 w-full h-full object-cover opacity-100',
           isLoading && 'opacity-0',
         )}
+        loading='lazy'
         {...props}
       />
     </div>
