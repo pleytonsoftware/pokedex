@@ -16,7 +16,7 @@ function App() {
   return (
     <>
       <Header />
-      <main className='relative pb-20 md:p-0'>
+      <main className='relative p-4 pb-20 md:pb-0'>
         <img src='/assets/pokeball.png' alt='pokeball' className='fixed w-56 h-56 top-4 right-4 -z-10 rotate-[30deg]' />
         <Outlet />
       </main>
