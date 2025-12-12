@@ -61,6 +61,7 @@ export default {
 			},
 			backgroundImage: {
 				'pokemon-type-gradient': 'linear-gradient(45deg, var(--tw-bg-color) 0%, var(--tw-bg-color) 15%, var(--tw-bg-secondary-color) 100%)',
+				'pokemon-type-gradient-135': 'linear-gradient(135deg, var(--tw-bg-color) 0%, var(--tw-bg-color) 15%, var(--tw-bg-secondary-color) 100%)',
 			},
 			fontFamily: {
 				'pokemon-solid': ['"Pokemon Solid"', 'sans-serif'],
